@@ -6,7 +6,9 @@ components built on the structure of Andrew Wheeler's
 [CrimeDecomp](https://github.com/apwheele/CrimeDecomp), adapted for Home
 Office quarterly data covering England & Wales, FY2015/16–2025/26.
 
-**[Live demo]()**
+**[Live demo](https://routineactivity.github.io/interactive-chart/index.html)**
+
+![Crime Trends](screenshots/crimetrends.jpg)
 
 Every CSP and PFA gets its own fitted trend and seasonal deviation from a
 national reference curve, so you can see at a glance whether a local area is
