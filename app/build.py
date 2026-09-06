@@ -1,0 +1,12 @@
+import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+with open(os.path.join(HERE, 'shell.html')) as f: shell = f.read()
+with open(os.path.join(HERE, 'styles.css')) as f: css = f.read()
+with open(os.path.join(HERE, 'payload.json')) as f: payload = f.read()
+with open(os.path.join(HERE, 'app_logic.js')) as f: appjs = f.read()
+out = shell.replace('__CSS__', css).replace('__DATA__', payload).replace('__APP_JS__', appjs)
+os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
+out_path = os.path.join(ROOT, 'dist', 'crime_explorer.html')
+with open(out_path, 'w') as f: f.write(out)
+print(f"wrote {out_path} ({os.path.getsize(out_path)/1e6:.2f} MB)")

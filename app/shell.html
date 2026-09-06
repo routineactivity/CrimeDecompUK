@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>England &amp; Wales crime decomposition explorer</title>
+<style>
+__CSS__
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">QUARTERLY CRIME DECOMPOSITION</p>
+    <h1>National trends and local departures</h1>
+    <p class="lede">Every Community Safety Partnership and Police Force Area in the Home Office's Police Recorded Crime open data tables (FY2015/16 - 2025/26). Rates are annualised from quarterly counts and shown per 100,000 residents.</p>
+  </header>
+
+  <nav class="tabs" aria-label="Views">
+    <button class="tab active" data-page="overview">Global patterns</button>
+    <button class="tab" data-page="csp">CSP detail</button>
+    <button class="tab" data-page="pfa">Police Force detail</button>
+    <button class="tab" data-page="all-csp">All-CSP curves</button>
+    <button class="tab" data-page="about">About</button>
+  </nav>
+
+  <section class="controls">
+    <label>Crime type<select id="crime"></select></label>
+  </section>
+  <p id="status" class="status">Loading...</p>
+
+  <section id="overview" class="page active">
+    <div class="card">
+      <h2>Global model decomposition</h2>
+      <p class="caption">Observed is the population-weighted quarterly national rate across all CSPs. Sample fitted aggregates each CSP's own fitted level, trend and season using population weights. Global trend and global trend+season describe a reference area whose deviations equal zero; they need not match the sample level because areas have different intercepts and the logit transform is nonlinear.</p>
+      <div id="global-chart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2>Seasonal component</h2>
+      <p class="caption">The change in annualised rate associated with each financial-year quarter, relative to the long-run trend. With only four quarters a year this is estimated as a saturated quarter effect rather than a smoothed harmonic curve.</p>
+      <div id="seasonal-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2>Shared time-period effect</h2>
+      <p class="caption">The common deviation shared by every CSP in a given quarter, after removing the smooth national trend and season: e.g. a nationwide shock such as a pandemic-affected quarter. Distinct from any single area's own residual. The horizontal line is the zero reference.</p>
+      <div id="global-residual-chart" class="chart short"></div>
+    </div>
+  </section>
+
+  <section id="csp" class="page">
+    <div class="card">
+      <div class="area-controls">
+        <label>Police Force Area<select id="csp-pfa-select"></select></label>
+        <label>Community Safety Partnership<select id="csp-select"></select></label>
+      </div>
+      <h2 id="csp-title">CSP detail</h2>
+      <p class="caption">Observed is this CSP's reported rate. Global baseline contains the crime-specific national intercept, trend and season. CSP fitted additionally contains this CSP's own average level and its trend and seasonal deviations.</p>
+      <div id="csp-chart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2 id="csp-trend-title">CSP and national trends</h2>
+      <p class="caption">The CSP and national trend curves are centered separately on the logit scale, removing the CSP's average level so the comparison is of trajectory shape rather than level. The band is an approximate 95% pointwise interval for the CSP's trend deviation.</p>
+      <div id="csp-trend-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2 id="csp-season-title">CSP and national seasonal patterns</h2>
+      <p class="caption">Compares this CSP's own quarter effect with the quarter effect shared nationally, both centered so only the shape (not level) is compared. The band is an approximate 95% pointwise interval for the CSP's seasonal deviation.</p>
+      <div id="csp-season-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2 id="csp-residual-title">CSP and national residuals</h2>
+      <p class="caption">The national residual is the shared quarter effect alone. The CSP residual adds this CSP's own observation-level departure. The band is an approximate 95% pointwise interval based on the residual's standard error.</p>
+      <div id="csp-residual-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2>Quarterly observed and expected outcomes</h2>
+      <p class="caption">Expected values include the CSP's fitted level, trend, season and the shared time-period effect, but exclude the CSP-quarter residual <em>e</em>. Counts are quarterly; rates are annualised per 100,000. Rows with |<em>e</em>| greater than two standard errors are highlighted: blue for decreases, red for increases.</p>
+      <div id="csp-quarter-table" class="table-wrap"></div>
+    </div>
+  </section>
+
+  <section id="pfa" class="page">
+    <div class="card">
+      <div class="area-controls">
+        <label>Police Force Area<select id="pfa-select"></select></label>
+      </div>
+      <h2 id="pfa-title">Police Force Area detail</h2>
+      <p class="caption">Same decomposition as CSP detail, aggregated to the whole Police Force Area (all its CSPs combined) rather than one CSP.</p>
+      <div id="pfa-chart" class="chart"></div>
+    </div>
+    <div class="card">
+      <h2 id="pfa-trend-title">Force and national trends</h2>
+      <div id="pfa-trend-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2 id="pfa-season-title">Force and national seasonal patterns</h2>
+      <div id="pfa-season-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2 id="pfa-residual-title">Force and national residuals</h2>
+      <div id="pfa-residual-chart" class="chart short"></div>
+    </div>
+    <div class="card">
+      <h2>Quarterly observed and expected outcomes</h2>
+      <div id="pfa-quarter-table" class="table-wrap"></div>
+    </div>
+  </section>
+
+  <section id="all-csp" class="page">
+    <div class="card">
+      <h2>Annualised quarterly rates across all CSPs</h2>
+      <p class="caption">Each grey line is one CSP's fitted annualised rate per 100,000 each quarter; the blue line is the national trend+season curve from Global Patterns. Hover a line to identify the CSP. Shared time-period and CSP-quarter residual effects are excluded.</p>
+      <div id="all-rates-chart" class="chart all-city-chart"></div>
+    </div>
+    <div class="card">
+      <h2>CSP-specific trend deviations</h2>
+      <p class="caption">Each grey line is one CSP's centered trend deviation from the national trend; zero means the CSP tracks the national trajectory. Hover a line to identify the CSP.</p>
+      <div id="all-trends-chart" class="chart all-city-chart"></div>
+    </div>
+    <div class="card">
+      <h2>CSP-specific seasonal deviations</h2>
+      <p class="caption">Each grey line is one CSP's centered seasonal deviation from the national quarter effect. Hover a line to identify the CSP.</p>
+      <div id="all-seasons-chart" class="chart all-city-chart"></div>
+    </div>
+    <div class="card">
+      <h2>CSP-specific quarterly residuals</h2>
+      <p class="caption">Each grey line is one CSP's residual <em>e</em> after national trend, season, level and the shared time-period effect are removed; the blue line marks zero. Hover a line to identify the CSP.</p>
+      <div id="all-residuals-chart" class="chart all-city-chart"></div>
+    </div>
+  </section>
+
+  <section id="about" class="page">
+    <div class="card about-card">
+      <h2>About this explorer</h2>
+      <p>This is an independent replica built on the structure of Andrew Wheeler's <a href="https://github.com/apwheele/CrimeDecomp">CrimeDecomp</a>, which separates US city-level crime patterns into trend, season and residual components. This version uses England &amp; Wales Community Safety Partnership (CSP) and Police Force Area (PFA) data from the Home Office's <a href="https://www.gov.uk/government/statistics/police-recorded-crime-open-data-tables">Police Recorded Crime open data tables</a> instead, at quarterly rather than monthly resolution.</p>
+      <h2>Methodology and how this differs from the original</h2>
+      <p>Each offence group is modeled separately. A logit-scale additive decomposition is fit per crime type: a national natural-spline trend plus a saturated financial-year-quarter effect (the quarterly analogue of the original's monthly Fourier harmonics), population-weighted across CSPs. Each CSP and PFA then gets its own trend and seasonal deviation from that national curve, fit as a simple per-area regression rather than a single joint mixed-effects model. This is a practical simplification, not a re-implementation of the original's <code>glmmTMB</code> random-effects model: smaller CSPs' curves are not statistically shrunk toward the national pattern the way a true mixed model would shrink them, so noisy small-area estimates should be read with that in mind.</p>
+      <p>Quarterly counts occasionally go negative in the Home Office data ahead of 2019, reflecting crimes later transferred to another force or cancelled and netted against the quarter in which that was discovered, rather than corrected retrospectively. These are genuine values, floored at zero only for the purposes of the rate/logit calculation used here, not zeroed out or hidden.</p>
+      <p>"Most serious violence" is not a category in the underlying Home Office tables. This is a legacy indicator (originally National Indicator 15, pre-2012) that some Community Safety Partnerships and Police and Crime Commissioners still construct locally, broadly as homicide plus the most serious wounding/endangerment offences. Treat it as a locally-constructed aggregate rather than an official published series.</p>
+      <h2>Data transformations and area exclusions</h2>
+      <p>A small number of areas were excluded outright. The City of London (both as a CSP and as its own Police Force Area) is dropped throughout: its resident population is around 8,600 but its daytime/working population runs into the hundreds of thousands, making any population-normalised rate for it an extreme, non-comparable outlier. Similar could be contended regarding Westminster in London, where the annual visitor numbers exceed tens of millions and activity in the West End creates similar outlying dynamics. The Isles of Scilly CSP is dropped for the same reason in miniature, a resident population of roughly 2,000 means its crime rate can swing wildly on a handful of offences. Manchester Airport is combined into the Manchester CSP, since the airport falls within the Manchester CSP boundary rather than constituting a separate comparable area.</p>
+      <p>Some CSPs were renamed or merged over the data's time range and are treated as a single continuous series under the current name. Historic Merthyr Tydfil and Rhondda Cynon Taf counts are combined into the CSP now named Cwm Taf.</p>
+      <p>In several police force areas the CSP boundaries published in the crime tables didn't line up with the local-authority boundaries used in the population estimates. Where CSPs were renamed/merged to align with the population data, the corresponding older CSPs were combined to match:</p>
+      <ul>
+        <li><strong>Cumbria:</strong> Barrow-in-Furness, Eden and South Lakeland &rarr; Westmorland and Furness; Carlisle, Allerdale and Copeland &rarr; Cumberland</li>
+        <li><strong>Dorset:</strong> Bournemouth and Poole &rarr; Bournemouth, Christchurch and Poole</li>
+        <li><strong>Northamptonshire:</strong> Corby, East Northamptonshire, Kettering and Wellingborough &rarr; North Northamptonshire; Daventry and South Northamptonshire, and Northampton &rarr; West Northamptonshire</li>
+        <li><strong>Thames Valley:</strong> Aylesbury Vale, Chiltern, South Bucks and Wycombe &rarr; Buckinghamshire</li>
+      </ul>
+      <p>Suffolk's LADs and CSPs don't align at all, so all of Suffolk except Ipswich was merged into a single Suffolk area in both the crime and population datasets: Suffolk Coastal, Waveney and Western Suffolk &rarr; Suffolk.</p>
+      <p>The reverse adjustment was also needed in other force areas, merging local-authority population figures together so they matched a CSP that is itself made up of multiple LADs:</p>
+      <ul>
+        <li><strong>Devon and Cornwall:</strong> East Devon and Mid Devon &rarr; East and Mid Devon; North Devon and Torridge &rarr; Northern Devon; South Hams, Teignbridge and West Devon &rarr; South Devon and Dartmoor</li>
+        <li><strong>Hampshire:</strong> Basingstoke and Deane, Hart and Rushmoor &rarr; North Hampshire</li>
+        <li><strong>Kent:</strong> Dartford and Gravesham &rarr; Dartford and Gravesham</li>
+        <li><strong>Nottinghamshire:</strong> Broxtowe, Gedling and Rushcliffe &rarr; South Nottinghamshire</li>
+        <li><strong>South Wales:</strong> Rhondda Cynon Taf and Merthyr Tydfil &rarr; Cwm Taf</li>
+        <li><strong>Suffolk:</strong> Babergh and Mid Suffolk &rarr; Suffolk</li>
+        <li><strong>Warwickshire:</strong> Stratford-on-Avon and Warwick &rarr; South Warwickshire</li>
+        <li><strong>West Mercia:</strong> Bromsgrove, Redditch and Wyre Forest &rarr; North Worcestershire; Malvern Hills, Worcester and Wychavon &rarr; South Worcester/South Worcestershire</li>
+      </ul>
+      <p>Finally, four Kent CSPs: Maidstone, Medway, Tonbridge and Malling, and Tunbridge Wells are excluded from the final crime dataset entirely. Since the 2024/25 financial year, the Home Office data has not assigned their crime totals accurately at CSP level; the counts instead appear under an "Unassigned Kent" category. Kent's Police Force Area total is unaffected by this exclusion, since it's built independently from force-level totals rather than by summing these CSPs.</p>
+    </div>
+  </section>
+</main>
+<div id="chart-tooltip" class="tooltip" role="status"></div>
+<script>
+const DATA = __DATA__;
+</script>
+<script>
+__APP_JS__
+</script>
+</body>
+</html>

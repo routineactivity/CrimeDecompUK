@@ -1,0 +1,71 @@
+:root{
+  --bg:#f7f7f5; --card:#ffffff; --ink:#1b1b18; --muted:#5b5b55; --line:#e4e2dc;
+  --accent:#c15f3c; --accent2:#3c6e9e; --grid:#eee; --band:rgba(60,110,158,0.14);
+  --tab-active:#1b1b18; --tab-inactive:#8a8880; --chip:#f0efe9;
+  --up:#b23b3b; --down:#3c6e9e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17181a; --card:#212226; --ink:#eceae4; --muted:#a5a39a; --line:#34353a;
+    --accent:#e08a63; --accent2:#7fb0e0; --grid:#33343a; --band:rgba(127,176,224,0.16);
+    --tab-active:#eceae4; --tab-inactive:#77766f; --chip:#2a2b2f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17181a; --card:#212226; --ink:#eceae4; --muted:#a5a39a; --line:#34353a;
+  --accent:#e08a63; --accent2:#7fb0e0; --grid:#33343a; --band:rgba(127,176,224,0.16);
+  --tab-active:#eceae4; --tab-inactive:#77766f; --chip:#2a2b2f;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+main{max-width:1120px;margin:0 auto;padding:20px 16px 60px;}
+header .eyebrow{letter-spacing:.08em;font-size:11px;font-weight:700;color:var(--accent);margin:0 0 6px;}
+header h1{font-size:26px;margin:0 0 8px;line-height:1.2;}
+header .lede{color:var(--muted);max-width:70ch;margin:0 0 18px;font-size:14px;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;}
+.tab{background:none;border:none;padding:10px 14px;font-size:13px;font-weight:600;color:var(--tab-inactive);cursor:pointer;border-bottom:2px solid transparent;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--tab-active);border-bottom-color:var(--accent);}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:6px;}
+.controls label, .area-controls label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:600;}
+select, button{font:inherit;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);}
+button{cursor:pointer;}
+button:hover{border-color:var(--accent);}
+.status{color:var(--muted);font-size:12px;margin:4px 0 18px;}
+.page{display:none;}
+.page.active{display:block;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px;}
+.card h2{font-size:15px;margin:0 0 4px;}
+.card .caption{color:var(--muted);font-size:12.5px;margin:0 0 10px;line-height:1.45;}
+.chart{width:100%;}
+.chart svg{width:100%;height:auto;display:block;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted);margin-top:6px;}
+.legend span{display:inline-flex;align-items:center;gap:5px;}
+.swatch{width:14px;height:3px;border-radius:2px;display:inline-block;}
+.chart-title{font-size:12px;font-weight:700;fill:var(--ink);}
+.axis-label{font-size:10px;fill:var(--muted);}
+.axis, .x-tick{stroke:var(--line);stroke-width:1;}
+.grid{stroke:var(--grid);stroke-width:1;}
+.zero-line{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;}
+.interval-band{fill:var(--band);stroke:none;}
+.legend-line{stroke-width:2;}
+.legend-line.thin{stroke-width:1.4;}
+.city-curve{stroke:var(--muted);stroke-width:1;fill:none;opacity:.45;cursor:pointer;}
+.city-curve:hover, .city-curve.highlighted{stroke:var(--accent);opacity:1;stroke-width:2;}
+svg.has-highlight .city-curve:not(.highlighted){opacity:.12;}
+.global-curve{stroke:var(--accent2);stroke-width:2.4;fill:none;}
+.table-wrap{overflow-x:auto;}
+table.data-table{border-collapse:collapse;width:100%;font-size:12.5px;}
+table.data-table th, table.data-table td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+table.data-table th:first-child, table.data-table td:first-child{text-align:left;}
+table.data-table thead th{color:var(--muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.03em;}
+tr.flag-up td{background:rgba(178,59,59,0.10);}
+tr.flag-down td{background:rgba(60,110,158,0.12);}
+.tooltip{position:fixed;display:none;background:var(--ink);color:var(--bg);padding:4px 8px;border-radius:6px;font-size:11.5px;pointer-events:none;z-index:50;white-space:nowrap;}
+.about-card p{font-size:13.5px;line-height:1.6;}
+.about-card code{background:var(--chip);padding:1px 5px;border-radius:4px;font-size:12px;}
+.area-controls{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;}
+@media (max-width:640px){
+  header h1{font-size:21px;}
+  .card{padding:12px 12px;}
+}
